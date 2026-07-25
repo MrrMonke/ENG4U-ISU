@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading Journal — The Illegal</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Caveat:wght@500;700&display=swap');
+
+:root{
+  --paper: #efe6d2;
+  --paper-card: #f4ecdb;
+  --paper-dark: #e2d3ac;
+  --ink: #2c241a;
+  --ink-soft: #52483a;
+  --rust: #a23b2e;
+  --teal: #2f5d55;
+  --gold: #ab8a3f;
+  --shadow: rgba(35, 24, 12, 0.28);
+}
+
+*{ box-sizing: border-box; }
+
+html,body{
+  margin:0; padding:0;
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: 'Lora', serif;
+}
+
+body{
+  background-image:
+    radial-gradient(circle at 20% 15%, rgba(171,138,63,0.06), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(47,93,85,0.05), transparent 45%),
+    repeating-linear-gradient(0deg, rgba(60,45,20,0.02) 0px, rgba(60,45,20,0.02) 1px, transparent 1px, transparent 3px),
+    repeating-linear-gradient(90deg, rgba(60,45,20,0.015) 0px, rgba(60,45,20,0.015) 1px, transparent 1px, transparent 3px);
+  min-height: 100vh;
+}
+
+.desk{
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 48px 20px 120px;
+}
+
+/* ---------- COVER ---------- */
+.cover{
+  position: relative;
+  background: var(--paper-dark);
+  border: 1px solid rgba(44,36,26,0.25);
+  padding: 56px 40px 46px;
+  margin-bottom: 70px;
+  box-shadow: 0 18px 40px var(--shadow), inset 0 0 60px rgba(44,36,26,0.06);
+  text-align: center;
+  transform: rotate(-0.4deg);
+}
+.cover::before{
+  content:"";
+  position:absolute; inset:10px;
+  border: 1.5px dashed rgba(44,36,26,0.3);
+  pointer-events:none;
+}
+.cover .eyebrow{
+  font-family:'Special Elite', monospace;
+  letter-spacing: 3px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+.cover h1{
+  font-family:'Special Elite', monospace;
+  font-size: clamp(30px, 6vw, 46px);
+  margin: 14px 0 6px;
+  color: var(--ink);
+  letter-spacing: 1px;
+}
+.cover h2{
+  font-family:'Caveat', cursive;
+  font-weight:700;
+  font-size: 30px;
+  margin: 0 0 18px;
+  color: var(--rust);
+}
+.cover .byline{
+  font-size: 15px;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+.cover .card-stamp{
+  position:absolute;
+  top: -22px;
+  right: 28px;
+}
+
+/* ---------- ENTRY PAGE ---------- */
+.entry{
+  position: relative;
+  background: var(--paper-card);
+  border: 1px solid rgba(44,36,26,0.22);
+  padding: 40px 38px 34px;
+  margin-bottom: 56px;
+  box-shadow: 0 14px 30px var(--shadow);
+}
+.entry:nth-of-type(odd){ transform: rotate(-0.55deg); }
+.entry:nth-of-type(even){ transform: rotate(0.55deg); }
+
+.tape{
+  position:absolute;
+  width: 110px; height: 34px;
+  background: linear-gradient(180deg, rgba(196,168,102,0.75), rgba(196,168,102,0.55));
+  border: 1px solid rgba(120,95,45,0.25);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  opacity: 0.85;
+}
+.tape.left{ top: -16px; left: 34px; transform: rotate(-6deg); }
+.tape.right{ top: -14px; right: 30px; transform: rotate(5deg); }
+
+.paperclip{
+  position:absolute;
+  top: -20px; left: 50%;
+  transform: translateX(-50%) rotate(-3deg);
+  width: 34px; height: 62px;
+}
+
+.entry-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1.5px solid rgba(44,36,26,0.35);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+.entry-num{
+  font-family:'Special Elite', monospace;
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  color: var(--teal);
+  text-transform: uppercase;
+}
+.entry-title{
+  font-family:'Special Elite', monospace;
+  font-size: clamp(19px, 3vw, 24px);
+  margin: 4px 0 0;
+  color: var(--ink);
+}
+.stamp-wrap{ flex: 0 0 auto; }
+
+.entry p{
+  font-size: 16.5px;
+  line-height: 1.75;
+  color: var(--ink);
+  margin: 0 0 16px;
+}
+.entry p:last-child{ margin-bottom: 0; }
+
+blockquote.quote{
+  font-family:'Lora', serif;
+  font-style: italic;
+  font-size: 16.5px;
+  color: var(--rust);
+  border-left: 3px solid var(--rust);
+  background: rgba(162,59,46,0.06);
+  margin: 18px 0;
+  padding: 12px 18px;
+}
+
+/* ---------- READING PLAN TABLE ---------- */
+.plan-table{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+.plan-table th{
+  font-family:'Special Elite', monospace;
+  font-size: 11.5px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--paper-card);
+  background: var(--teal);
+  padding: 9px 12px;
+}
+.plan-table td{
+  padding: 9px 12px;
+  border-bottom: 1px dashed rgba(44,36,26,0.3);
+  color: var(--ink);
+}
+.plan-table tr:nth-child(even) td{ background: rgba(171,138,63,0.08); }
+.plan-total{
+  font-family:'Special Elite', monospace;
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-top: 10px;
+  text-align: right;
+}
+
+/* ---------- MULTIMEDIA PLACEHOLDER ---------- */
+.polaroid{
+  background: #fbf7ec;
+  border: 1px solid rgba(44,36,26,0.2);
+  box-shadow: 0 10px 22px var(--shadow);
+  padding: 12px 12px 18px;
+  width: 240px;
+  margin: 22px auto 8px;
+}
+.entry:nth-of-type(odd) .polaroid{ transform: rotate(-2.5deg); }
+.entry:nth-of-type(even) .polaroid{ transform: rotate(2deg); }
+.polaroid .frame{
+  height: 160px;
+  background:
+    repeating-linear-gradient(135deg, rgba(44,36,26,0.10) 0 10px, rgba(44,36,26,0.04) 10px 20px),
+    linear-gradient(160deg, #d9cba3, #b9a26c);
+  display:flex; align-items:center; justify-content:center;
+  text-align:center;
+}
+.polaroid .frame span{
+  font-family:'Special Elite', monospace;
+  font-size: 11px;
+  color: var(--ink-soft);
+  padding: 0 14px;
+  letter-spacing: 0.5px;
+}
+.polaroid .cap{
+  font-family:'Caveat', cursive;
+  font-size: 18px;
+  color: var(--ink-soft);
+  text-align: center;
+  margin-top: 10px;
+}
+
+.scrapbook-pair{
+  display:flex;
+  gap: 16px;
+  justify-content:center;
+  flex-wrap: wrap;
+  margin: 22px 0 8px;
+}
+.scrapbook-pair .polaroid{ margin: 0; }
+
+/* ---------- IVERNIA LETTER ---------- */
+.letter{
+  background: #f8f1e2;
+  border: 1px solid rgba(44,36,26,0.25);
+  padding: 26px 28px;
+  margin-top: 6px;
+  font-family: 'Caveat', cursive;
+  font-size: 22px;
+  line-height: 1.55;
+  color: #3a2f22;
+  box-shadow: inset 0 0 30px rgba(44,36,26,0.06);
+  position: relative;
+}
+.letter::before{
+  content: "— from the personal desk ledger of Ivernia Beech —";
+  display:block;
+  font-family:'Special Elite', monospace;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--ink-soft);
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+
+/* ---------- ILLUSTRATIONS ---------- */
+.scene{
+  background: #fbf7ec;
+  border: 1px solid rgba(44,36,26,0.2);
+  box-shadow: 0 10px 22px var(--shadow);
+  padding: 10px;
+  margin: 22px auto 8px;
+  max-width: 420px;
+}
+.entry:nth-of-type(odd) .scene{ transform: rotate(-1deg); }
+.entry:nth-of-type(even) .scene{ transform: rotate(1deg); }
+.scene svg{ display:block; width:100%; height:auto; }
+.scene .cap{
+  font-family:'Caveat', cursive;
+  font-size: 18px;
+  color: var(--ink-soft);
+  text-align: center;
+  margin-top: 8px;
+}
+.triptych{
+  display:flex;
+  gap: 10px;
+  max-width: 620px;
+  margin: 22px auto 8px;
+}
+.triptych .panel{
+  background: #fbf7ec;
+  border: 1px solid rgba(44,36,26,0.2);
+  box-shadow: 0 8px 18px var(--shadow);
+  padding: 8px;
+  flex: 1;
+}
+.triptych .panel svg{ display:block; width:100%; height:auto; }
+.triptych .panel .cap{
+  font-family:'Special Elite', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.5px;
+  text-align:center;
+  color: var(--ink-soft);
+  margin-top: 6px;
+  text-transform: uppercase;
+}
+
+/* ---------- STAMP ---------- */
+.stamp{
+  width: 92px; height: 92px;
+  mix-blend-mode: multiply;
+  opacity: 0.88;
+}
+
+/* ---------- FOOTER ---------- */
+.desk-footer{
+  text-align:center;
+  font-family:'Special Elite', monospace;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  color: var(--ink-soft);
+  opacity: 0.7;
+  margin-top: 20px;
+}
+
+@media (max-width: 600px){
+  .entry{ padding: 30px 20px 26px; }
+  .entry-head{ flex-direction: column; }
+  .stamp{ width: 70px; height: 70px; }
+}
+</style>
+</head>
+<body>
+<div class="desk">
+
+  <!-- COVER -->
+  <div class="cover">
+    <svg class="card-stamp" viewBox="0 0 100 100" width="80" height="80">
+      <defs><path id="cp0" d="M 50,50 m -36,0 a 36,36 0 1,1 72,0 a 36,36 0 1,1 -72,0"/></defs>
+      <circle cx="50" cy="50" r="38" fill="none" stroke="#a23b2e" stroke-width="2"/>
+      <circle cx="50" cy="50" r="30" fill="none" stroke="#a23b2e" stroke-width="1"/>
+      <text font-family="Special Elite, monospace" font-size="8.5" fill="#a23b2e" letter-spacing="2">
+        <textPath href="#cp0" startOffset="2">READING JOURNAL &#9670; ENTRY LOG &#9670;</textPath>
+      </text>
+      <text x="50" y="54" text-anchor="middle" font-family="Special Elite, monospace" font-size="13" fill="#a23b2e">RA</text>
+    </svg>
+    <div class="eyebrow">Personal Reading Journal</div>
+    <h1>The Illegal</h1>
+    <h2>a novel by Lawrence Hill</h2>
+    <div class="byline">ten entries · quotations, reflections &amp; scrapbook clippings</div>
+  </div>
+
+  <!-- ENTRY 1 -->
+  <div class="entry">
+    <div class="tape left"></div><div class="tape right"></div>
+    <div class="entry-head">
+      <div>
+        <div class="entry-num">Journal Entry No. 1</div>
+        <h3 class="entry-title">Reading Plan</h3>
+      </div>
+      <div class="stamp-wrap">
+        <svg class="stamp" viewBox="0 0 100 100">
+          <defs><path id="cp1" d="M 50,50 m -34,0 a 34,34 0 1,1 68,0 a 34,34 0 1,1 -68,0"/></defs>
+          <circle cx="50" cy="50" r="36" fill="none" stroke="#2f5d55" stroke-width="2"/>
+          <circle cx="50" cy="50" r="28" fill="none" stroke="#2f5d55" stroke-width="1"/>
+          <text font-family="Special Elite, monospace" font-size="7.5" fill="#2f5d55" letter-spacing="1.5">
+            <textPath href="#cp1" startOffset="3">ZANTOROLAND &#9670; DEPARTURE LOG &#9670;</textPath>
+          </text>
+          <text x="50" y="52" text-anchor="middle" font-family="Special Elite, monospace" font-size="11" fill="#2f5d55">No. 01</text>
+          <text x="50" y="63" text-anchor="middle" font-family="Special Elite, monospace" font-size="7" fill="#2f5d55">335 PGS</text>
+        </svg>
+      </div>
+    </div>
+
+    <p><strong>Novel:</strong> The Illegal by Lawrence Hill &nbsp;·&nbsp; <strong>Total Pages:</strong> 335</p>
+    <table class="plan-table">
+      <thead><tr><th>Date</th><th>Reading Assignment</th></tr></thead>
+      <tbody>
+        <tr><td>July 6</td><td>Pages 1–34</td></tr>
+        <tr><td>July 8</td><td>Pages 35–68</td></tr>
+        <tr><td>July 10</td><td>Pages 69–102</td></tr>
+        <tr><td>July 12</td><td>Pages 103–136</td></tr>
+        <tr><td>July 14</td><td>Pages 137–170</td></tr>
+        <tr><td>July 16</td><td>Pages 171–204</td></tr>
+        <tr><td>July 18</td><td>Pages 205–238</td></tr>
+        <tr><td>July 20</td><td>Pages 239–272</td></tr>
+        <tr><td>July 22</td><td>Pages 273–306</td></tr>
+        <tr><td>July 24</td><td>Pages 307–335</td></tr>
+        <tr><td>July 25–27</td><td>Review notes, collect quotations, and complete the reading journal</td></tr>
+      </tbody>
+    </table>
+    <div class="scene">
+      <svg viewBox="0 0 300 190" xmlns="http://www.w3.org/2000/svg">
+        <rect width="300" height="190" fill="#e2d3ac"/>
+        <g transform="translate(30,26) rotate(-3)">
+          <rect x="0" y="0" width="150" height="120" fill="#f4ecdb" stroke="#2c241a" stroke-width="1.5"/>
+          <line x1="14" y1="20" x2="136" y2="20" stroke="#a23b2e" stroke-width="1"/>
+          <line x1="14" y1="38" x2="136" y2="38" stroke="#c9bda0" stroke-width="1"/>
+          <line x1="14" y1="54" x2="136" y2="54" stroke="#c9bda0" stroke-width="1"/>
+          <line x1="14" y1="70" x2="136" y2="70" stroke="#c9bda0" stroke-width="1"/>
+          <line x1="14" y1="86" x2="100" y2="86" stroke="#c9bda0" stroke-width="1"/>
+          <rect x="130" y="-6" width="8" height="34" fill="#2f5d55"/>
+        </g>
+        <g transform="translate(190,44) rotate(8)">
+          <rect x="0" y="0" width="70" height="96" fill="#fbf7ec" stroke="#2c241a" stroke-width="1.5"/>
+          <text x="35" y="46" text-anchor="middle" font-family="Special Elite, monospace" font-size="8" fill="#2c241a">THE</text>
+          <text x="35" y="58" text-anchor="middle" font-family="Special Elite, monospace" font-size="8" fill="#2c241a">ILLEGAL</text>
+          <line x1="10" y1="70" x2="60" y2="70" stroke="#ab8a3f" stroke-width="1"/>
+        </g>
+        <g transform="translate(60,140) rotate(-25)">
+          <rect x="0" y="0" width="90" height="7" rx="3" fill="#a23b2e"/>
+          <polygon points="90,3.5 100,0 100,7" fill="#2c241a"/>
+        </g>
+      </svg>
+      <div class="cap">notebook, pen &amp; a fresh reading plan</div>
+    </div>
+  </div>
+
+  <!-- ENTRY 2 -->
+  <div class="entry">
+    <div class="tape left"></div><div class="tape right"></div>
+    <div class="entry-head">
+      <div>
+        <div class="entry-num">Journal Entry No. 2</div>
+        <h3 class="entry-title">Why I Chose The Illegal</h3>
+      </div>
+      <div class="stamp-wrap">
+        <svg class="stamp" viewBox="0 0 100 100">
+          <defs><path id="cp2" d="M 50,50 m -34,0 a 34,34 0 1,1 68,0 a 34,34 0 1,1 -68,0"/></defs>
+          <circle cx="50" cy="50" r="36" fill="none" stroke="#a23b2e" stroke-width="2"/>
+          <circle cx="50" cy="50" r="28" fill="none" stroke="#a23b2e" stroke-width="1"/>
+          <text font-family="Special Elite, monospace" font-size="7.5" fill="#a23b2e" letter-spacing="1.5">
+            <textPath href="#cp2" startOffset="3">FIRST IMPRESSIONS &#9670; NO. 02 &#9670;</textPath>
+          </text>
+          <text x="50" y="55" text-anchor="middle" font-family="Special Elite, monospace" font-size="11" fill="#a23b2e">WHY</text>
+        </svg>
+      </div>
+    </div>
+    <p>I chose The Illegal by Lawrence Hill because the story combines action with meaningful social issues such as identity, discrimination, and perseverance. The idea of following a talented runner who is forced to fight for survival immediately caught my attention because it seemed both exciting and intriguing. I also wanted to read a novel that explores challenges people face around the world while showing the importance of resilience and hope. Before beginning the novel, I expected it to be an emotional story that would challenge my perspective and help me better understand the experiences of people who are forced to overcome injustice.</p>
+    <div class="scene">
+      <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg">
+        <rect width="300" height="170" fill="#8a6a45"/>
+        <rect y="0" width="300" height="170" fill="url(#woodlines)"/>
+        <defs>
+          <pattern id="woodlines" width="300" height="14" patternUnits="userSpaceOnUse">
+            <rect width="300" height="14" fill="none"/>
+            <line x1="0" y1="7" x2="300" y2="7" stroke="#6f5334" stroke-width="1" opacity="0.5"/>
+          </pattern>
+        </defs>
+        <g transform="translate(40,36) rotate(-4)">
+          <rect x="0" y="0" width="86" height="112" fill="#efe6d2" stroke="#2c241a" stroke-width="2"/>
+          <rect x="8" y="10" width="70" height="92" fill="#a23b2e"/>
+          <text x="43" y="52" text-anchor="middle" font-family="Special Elite, monospace" font-size="9" fill="#efe6d2">THE</text>
+          <text x="43" y="66" text-anchor="middle" font-family="Special Elite, monospace" font-size="9" fill="#efe6d2">ILLEGAL</text>
+          <text x="43" y="90" text-anchor="middle" font-family="Lora, serif" font-size="7" fill="#efe6d2" font-style="italic">Lawrence Hill</text>
+        </g>
+        <g transform="translate(175,70)">
+          <path d="M0,50 q-6,-14 4,-20 q10,6 4,20 z" fill="none" stroke="#efe6d2" stroke-width="2" opacity="0.6"/>
+          <path d="M22,50 q-6,-16 4,-24 q10,8 4,24 z" fill="none" stroke="#efe6d2" stroke-width="2" opacity="0.6"/>
+          <rect x="-14" y="50" width="60" height="40" rx="4" fill="#efe6d2" stroke="#2c241a" stroke-width="2"/>
+          <path d="M46,58 q16,4 8,20 q-8,6 -10,-2" fill="none" stroke="#2c241a" stroke-width="2"/>
+        </g>
+      </svg>
+      <div class="cap">the book that started it all, coffee close at hand</div>
+    </div>
+  </div>
+
+  <!-- ENTRY 3 -->
+  <div class="entry">
+    <div class="tape left"></div><div class="tape right"></div>
+    <div class="entry-head">
+      <div>
+        <div class="entry-num">Journal Entry No. 3</div>
+        <h3 class="entry-title">Character Development — Keita Ali</h3>
+      </div>
+      <div class="stamp-wrap">
+        <svg class="stamp" viewBox="0 0 100 100">
+          <defs><path id="cp3" d="M 50,50 m -34,0 a 34,34 0 1,1 68,0 a 34,34 0 1,1 -68,0"/></defs>
+          <circle cx="50" cy="50" r="36" fill="none" stroke="#2f5d55" stroke-width="2"/>
+          <circle cx="50" cy="50" r="28" fill="none" stroke="#2f5d55" stroke-width="1"/>
+          <text font-family="Special Elite, monospace" font-size="7.5" fill="#2f5d55" letter-spacing="1.5">
+            <textPath href="#cp3" startOffset="3">KEITA ALI &#9670; RUNNER ON RECORD &#9670;</textPath>
+          </text>
+          <text x="50" y="55" text-anchor="middle" font-family="Special Elite, monospace" font-size="11" fill="#2f5d55">No. 03</text>
+        </svg>
+      </div>
+    </div>
+
+    <p><em>First Third of the Novel</em></p>
+    <p>At the beginning of The Illegal, Lawrence Hill introduces Keita Ali as a determined, humble, and hardworking young man whose greatest passion is running. His dream is to become an Olympic marathon champion because he believes success could improve both his own future and the lives of his family. However, his life is shattered by political violence and discrimination against the Faloo people. Keita witnesses the murder of Deacon Andrews, loses his mother during the conflict, and watches his father suffer imprisonment and torture because of his journalism. These tragedies force him to mature quickly and transform running into more than just a sport, it becomes his way of coping with grief and holding onto hope. Establishing the immediate political danger and the severe threats he faces right at home in Zantoroland, Hill writes:</p>
+    <blockquote class="quote">"If Keita stayed in Zantoroland, he would die. He was his father's son, and that in itself would be a death sentence" (Hill 48).</blockquote>
+    <p>This quotation demonstrates the crushing reality that forces Keita to flee his homeland. My first impression of Keita is that he is incredibly resilient because, despite everything he loses, he refuses to give up on himself or his dreams.</p>
+
+    <p><em>Second Third of the Novel</em></p>
+    <p>As the novel progresses, Keita becomes more independent and cautious after escaping Zantoroland and living as an undocumented immigrant in Freedom State. Although he continues pursuing his dream of becoming a successful runner, his priority shifts from achieving athletic success to simply surviving each day. He faces racism, poverty, isolation, and the constant fear of being discovered by immigration authorities, yet he refuses to let these hardships change his compassionate nature. Rather than responding to injustice with hatred, he continues relying on discipline, perseverance, and hope. Capturing his underground existence and the constant paranoia of being hunted by the state, Hill notes how he must navigate a place where people are targeted simply for existing without papers, quoting:</p>
+    <blockquote class="quote">"What are you doing here? Do you have your papers? Are you an illegal?" (Hill 238).</blockquote>
+    <p>Although brief, this dialogue highlights the constant systemic hostility Keita faces in this middle phase. As I continued reading, I realized that his greatest strength is not his speed, but his ability to keep moving forward even when life gives him every reason to stop. Lawrence Hill suggests that resilience comes not from physical strength alone, but from choosing hope over despair.</p>
+
+    <p><em>Final Third of the Novel</em></p>
+    <p>By the end of the novel, Keita has grown into a resilient and mature young man who understands that true strength comes from perseverance rather than revenge. Although he continues carrying the pain of losing his family and homeland, he refuses to let those experiences define his future. During the novel's major conflict, Keita responds with courage, integrity, and determination instead of bitterness. He also learns that family is not only the people he was born with but also the people who choose to support him when he has nowhere else to turn. Facing the ultimate pressure to win a race to secure rescue funds and protect his loved ones, Hill emphasizes the high-stakes ticking clock of the climax:</p>
+    <blockquote class="quote">"If he did not raise that money, he'd never see his sister again" (Hill 273).</blockquote>
+    <p>Looking back at the beginning of the novel, I can clearly see how much Keita has changed. He begins as a young athlete chasing Olympic dreams, but finishes as someone who understands that preserving his humanity is a far greater achievement than winning any race. His journey demonstrates that resilience is not simply about surviving difficult circumstances, it is about refusing to let those circumstances take away your identity, hope, or compassion.</p>
+    <div class="triptych">
+      <div class="panel">
+        <svg viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="90" fill="#e8b45a"/>
+          <circle cx="80" cy="18" r="12" fill="#fbdf8a"/>
+          <rect y="55" width="100" height="35" fill="#c98a3f"/>
+          <path d="M0,60 Q50,50 100,60" fill="none" stroke="#efe6d2" stroke-width="2"/>
+          <path d="M0,68 Q50,58 100,68" fill="none" stroke="#efe6d2" stroke-width="2"/>
+          <circle cx="40" cy="48" r="4" fill="#2c241a"/>
+          <path d="M40,52 L36,66 M40,52 L44,64 M40,52 L32,58 M40,52 L46,58" stroke="#2c241a" stroke-width="2" fill="none"/>
+        </svg>
+        <div class="cap">Zantoroland · golden dream</div>
+      </div>
+      <div class="panel">
+        <svg viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="90" fill="#1f2b30"/>
+          <rect x="10" y="0" width="10" height="60" fill="#141d20"/>
+          <rect x="70" y="0" width="14" height="70" fill="#141d20"/>
+          <line x1="30" y1="10" x2="30" y2="70" stroke="#3a4a4f" stroke-width="6"/>
+          <circle cx="30" cy="8" r="5" fill="#e8d999" opacity="0.8"/>
+          <path d="M55,50 L52,66 M55,50 L58,64 M55,50 L48,56 M55,50 L61,56" stroke="#c9bda0" stroke-width="2" fill="none" opacity="0.85"/>
+          <circle cx="55" cy="46" r="3.5" fill="#c9bda0" opacity="0.85"/>
+        </svg>
+        <div class="cap">Freedom State · underground</div>
+      </div>
+      <div class="panel">
+        <svg viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="90" fill="#2f5d55"/>
+          <rect y="60" width="100" height="30" fill="#254a44"/>
+          <line x1="0" y1="60" x2="100" y2="60" stroke="#efe6d2" stroke-width="2" stroke-dasharray="4 3"/>
+          <circle cx="20" cy="20" r="10" fill="#f2c76a"/>
+          <path d="M55,58 L52,72 M55,58 L58,70 M55,58 L47,64 M55,58 L63,64" stroke="#efe6d2" stroke-width="2.2" fill="none"/>
+          <circle cx="55" cy="54" r="4" fill="#efe6d2"/>
+        </svg>
+        <div class="cap">the finish line · resilience</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENTRY 4 -->
+  <div class="entry">
+    <div class="tape left"></div><div class="tape right"></div>
+    <div class="entry-head">
+      <div>
+        <div class="entry-num">Journal Entry No. 4</div>
+        <h3 class="entry-title">Context Research</h3>
+      </div>
+      <div class="stamp-wrap">
+        <svg class="stamp" viewBox="0 0 100 100">
+          <defs><path id="cp4" d="M 50,50 m -34,0 a 34,34 0 1,1 68,0 a 34,34 0 1,1 -68,0"/></defs>
+          <circle cx="50" cy="50" r="36" fill="none" stroke="#a23b2e" stroke-width="2"/>
+          <circle cx="50" cy="50" r="28" fill="none" stroke="#a23b2e" stroke-width="1"/>
+          <text font-family="Special Elite, monospace" font-size="7.5" fill="#a23b2e" letter-spacing="1.5">
+            <textPath href="#cp4" startOffset="3">AUTHOR &amp; CONTEXT &#9670; NO. 04 &#9670;</textPath>
+          </text>
+          <text x="50" y="55" text-anchor="middle" font-family="Special Elite, monospace" font-size="10" fill="#a23b2e">RESEARCH</text>
+        </svg>
+      </div>
+    </div>
+
+    <p><em>The Author</em></p>
+    <p>Lawrence Hill is a Canadian author, journalist, and essayist born in Newmarket, Ontario, in 1957. He grew up in a family deeply involved in civil rights and social justice. His father, Daniel G. Hill, was a historian and human rights activist, while his mother, Donna Hill, also worked to promote equality. These experiences influenced many of Hill's novels, which often explore racism, identity, migration, and belonging. Hill has said he wanted The Illegal to focus on the personal experiences of refugees rather than political debates.</p>
+    <p>Understanding Hill's background helps me see why Keita's story focuses so much on identity, discrimination, and resilience. Knowing the author's personal interests makes the novel's message feel more authentic and purposeful.</p>
+
+    <p><em>Historical and Social Context</em></p>
+    <p>Although The Illegal is set in fictional countries, it reflects real issues that were affecting millions of people around the world when Hill wrote the novel. Refugee crises caused by war, political persecution, and violence displaced millions of people from countries such as Syria, South Sudan, and Eritrea. The novel also explores racism, human trafficking, poverty, and the challenges faced by undocumented immigrants.</p>
+    <p>Learning about these real-world events helped me realize that Keita's experiences are not unique to fiction. His struggles represent the challenges faced by many refugees today, making the novel much more realistic and meaningful.</p>
+
+    <p><em>The Novel's Setting</em></p>
+    <p>The novel begins in the fictional country of Zantoroland before Keita escapes to Freedom State. Although both countries are fictional, they reflect real societies affected by political instability, discrimination, and unequal treatment of minority groups. Even after reaching Freedom State, Keita continues to face fear, exploitation, and the threat of deportation because of his immigration status.</p>
+    <p>Understanding why Lawrence Hill created fictional countries helped me realize that the novel is not criticizing one nation in particular. Instead, it shows that prejudice and injustice can exist anywhere, making Keita's story feel universal rather than tied to one specific place.</p>
+    <div class="scrapbook-pair">
+      <div class="polaroid">
+        <div class="frame" style="background:linear-gradient(160deg,#3a4a4f,#1f2b30); display:flex; align-items:center; justify-content:center;">
+          <svg viewBox="0 0 100 100" width="90" height="90">
+            <circle cx="50" cy="38" r="20" fill="#efe6d2" opacity="0.85"/>
+            <path d="M18,92 Q18,58 50,58 Q82,58 82,92 Z" fill="#efe6d2" opacity="0.85"/>
+          </svg>
+        </div>
+        <div class="cap">Lawrence Hill, journalist &amp; novelist</div>
+      </div>
+      <div class="polaroid">
+        <div class="frame" style="background:#dccb9c;">
+          <svg viewBox="0 0 160 130" width="100%" height="100%">
+            <rect width="160" height="130" fill="#e6d6a7"/>
+            <path d="M20,90 Q40,60 70,70 Q100,80 130,50 Q145,35 150,20" fill="none" stroke="#7a5c34" stroke-width="2"/>
+            <circle cx="20" cy="90" r="3" fill="#a23b2e"/>
+            <circle cx="150" cy="20" r="3" fill="#a23b2e"/>
+            <circle cx="75" cy="35" r="16" fill="none" stroke="#7a5c34" stroke-width="1"/>
+            <line x1="75" y1="21" x2="75" y2="49" stroke="#7a5c34" stroke-width="0.6"/>
+            <line x1="61" y1="35" x2="89" y2="35" stroke="#7a5c34" stroke-width="0.6"/>
+            <rect x="8" y="98" width="60" height="22" fill="#f4ecdb" stroke="#2c241a" stroke-width="1"/>
+            <line x1="12" y1="105" x2="64" y2="105" stroke="#2c241a" stroke-width="1"/>
+            <line x1="12" y1="111" x2="50" y2="111" stroke="#2c241a" stroke-width="1"/>
+            <line x1="12" y1="117" x2="58" y2="117" stroke="#2c241a" stroke-width="1"/>
+          </svg>
+        </div>
+        <div class="cap">migration routes &amp; newsprint clippings</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENTRY 5 -->
+  <div class="entry">
+    <div class="tape left"></div><div class="tape right"></div>
+    <div class="entry-head">
+      <div>
+        <div class="entry-num">Journal Entry No. 5</div>
+        <h3 class="entry-title">The Theme of Resilience</h3>
+      </div>
+      <div class="stamp-wrap">
+        <svg class="stamp" viewBox="0 0 100 100">
+          <defs><path id="cp5" d="M 50,50 m -34,0 a 34,34 0 1,1 68,0 a 34,34 0 1,1 -68,0"/></defs>
+          <circle cx="50" cy="50" r="36" fill="none" stroke="#2f5d55" stroke-width="2"/>
+          <circle cx="50" cy="50" r="28" fill="none" stroke="#2f5d55" stroke-width="1"/>
+          <text font-family="Special Elite, monospace" font-size="7.5" fill="#2f5d55" letter-spacing="1.5">
+            <textPath href="#cp5" startOffset="3">HE RAN TO SURVIVE &#9670; NO. 05 &#9670;</textPath>
+          </text>
+          <text x="50" y="55" text-anchor="middle" font-family="Special Elite, monospace" font-size="10" fill="#2f5d55">THEME</text>
+        </svg>
+      </div>
+    </div>
+    <p>Throughout The Illegal, Lawrence Hill presents resilience as the ability to keep moving forward despite overwhelming loss and injustice. Keita Ali demonstrates this right from the start when his world falls apart due to political violence and the loss of his family; instead of giving up, Hill notes how he turns to his passion as a vital source of strength:</p>
+    <blockquote class="quote">"When his father did not know where to put his pain, he wrote. Charity studied. Keita went running." (Hill 29).</blockquote>
+    <p>As an undocumented refugee in Freedom State, Keita faces poverty, racism, and constant fear, yet he refuses to surrender. Hill emphasizes this enduring drive, noting how</p>
+    <blockquote class="quote">"He ran because he had to. He ran to survive" (Hill 154).</blockquote>
+    <p>Other characters also display resilience, such as Charity continuing her education despite the danger and compassionate allies helping Keita against the odds. This proves that resilience is strengthened not just by inner determination, but through human support. Ultimately, Hill suggests that true resilience is about preserving your humanity and hope rather than just avoiding suffering. Facing the ultimate test to save his sister, Keita's endurance is driven by a profound sense of purpose:</p>
+    <blockquote class="quote">"If he did not raise that money, he'd never see his sister again" (Hill 273).</blockquote>
+    <p>Through his journey, Lawrence Hill communicates that resilience is one of a person's greatest strengths, allowing individuals to overcome adversity without losing who they truly are.</p>
+    <div class="scene">
+      <svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
+        <rect width="300" height="150" fill="#8f8a7c"/>
+        <path d="M0,40 L60,44 L40,60 L100,66 L70,90 L160,96 L140,120 L300,128 L300,150 L0,150 Z" fill="#77725f"/>
+        <path d="M40,60 L44,90" stroke="#5c5848" stroke-width="1.5"/>
+        <path d="M140,120 L136,148" stroke="#5c5848" stroke-width="1.5"/>
+        <path d="M100,66 L104,96" stroke="#5c5848" stroke-width="1.5"/>
+        <g transform="translate(150,60)">
+          <path d="M0,50 Q2,20 30,16 Q60,14 70,32 Q76,44 62,50 Q30,58 0,50 Z" fill="#2c241a"/>
+          <path d="M0,50 Q30,60 70,50 L70,58 Q30,68 0,58 Z" fill="#1c1712"/>
+          <path d="M8,44 Q30,38 55,40" stroke="#a23b2e" stroke-width="2" fill="none"/>
+        </g>
+        <g transform="translate(110,96)">
+          <path d="M0,20 Q-2,4 6,-6" stroke="#3f6b3f" stroke-width="2.5" fill="none"/>
+          <path d="M2,4 Q-8,0 -12,-8" stroke="#3f6b3f" stroke-width="2" fill="none"/>
+          <path d="M3,-2 Q10,-6 14,-14" stroke="#3f6b3f" stroke-width="2" fill="none"/>
+        </g>
+      </svg>
+      <div class="cap">a worn shoe, and hope pushing through the cracks</div>
+    </div>
+  </div>
+
+  <!-- ENTRY 6 -->
+  <div class="entry">
+    <div class="tape left"></div><div class="tape right"></div>
+    <div class="entry-head">
+      <div>
+        <div class="entry-num">Journal Entry No. 6</div>
+        <h3 class="entry-title">Literary Lens — Socio-Economic</h3>
+      </div>
+      <div class="stamp-wrap">
+        <svg class="stamp" viewBox="0 0 100 100">
+          <defs><path id="cp6" d="M 50,50 m -34,0 a 34,34 0 1,1 68,0 a 34,34 0 1,1 -68,0"/></defs>
+          <circle cx="50" cy="50" r="36" fill="none" stroke="#a23b2e" stroke-width="2"/>
+          <circle cx="50" cy="50" r="28" fill="none" stroke="#a23b2e" stroke-width="1"/>
+          <text font-family="Special Elite, monospace" font-size="7.5" fill="#a23b2e" letter-spacing="1.5">
+            <textPath href="#cp6" startOffset="3">CLASS &amp; BORDERS &#9670; NO. 06 &#9670;</textPath>
+          </text>
+          <text x="50" y="55" text-anchor="middle" font-family="Special Elite, monospace" font-size="10" fill="#a23b2e">LENS</text>
+        </svg>
+      </div>
+    </div>
+    <p>Applying a socio-economic lens to The Illegal by Lawrence Hill deeply transforms the interpretation of the narrative by framing Keita Ali's struggles not merely as personal hardships, but as the direct result of systemic inequality, wealth disparity, and corrupt political power structures. From this perspective, the wealthy nation of Freedom State and the impoverished island of Zantoroland represent a stark global divide where institutional forces systematically strip marginalized populations of their basic human rights and legal identity. Keita's desperate flight across borders highlights how class and economic status dictate survival, turning vulnerable individuals into "illegals" who are exploited for cheap labor while being denied societal protection. This systemic oppression is powerfully illustrated when Keita navigates an environment where his very existence is criminalized by bureaucracy, prompting him to recognize that</p>
+    <blockquote class="quote">"What are you doing here? Do you have your papers? Are you an illegal?" (Hill 238).</blockquote>
+    <p>Ultimately, viewing the novel through a socio-economic lens shifts the core message from a simple tale of individual athletic perseverance to a sharp critique of global capitalism and political corruption, revealing that true justice requires challenging the power structures that treat human lives as disposable commodities.</p>
+    <div class="scene">
+      <svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
+        <rect width="150" height="150" fill="#1d3a3a"/>
+        <rect x="150" width="150" height="150" fill="#c9b077"/>
+        <g fill="#274d4a">
+          <rect x="14" y="60" width="20" height="90"/>
+          <rect x="40" y="40" width="24" height="110"/>
+          <rect x="70" y="70" width="18" height="80"/>
+          <rect x="94" y="20" width="26" height="130"/>
+        </g>
+        <g fill="#e8d999" opacity="0.85">
+          <rect x="46" y="50" width="4" height="4"/><rect x="54" y="50" width="4" height="4"/>
+          <rect x="46" y="62" width="4" height="4"/><rect x="54" y="62" width="4" height="4"/>
+          <rect x="100" y="34" width="4" height="4"/><rect x="110" y="34" width="4" height="4"/>
+          <rect x="100" y="46" width="4" height="4"/><rect x="110" y="46" width="4" height="4"/>
+        </g>
+        <g transform="translate(225,80)">
+          <circle r="34" fill="none" stroke="#a23b2e" stroke-width="2.5"/>
+          <circle r="26" fill="none" stroke="#a23b2e" stroke-width="1"/>
+          <text y="-4" text-anchor="middle" font-family="Special Elite, monospace" font-size="9" fill="#a23b2e">DENIED</text>
+          <text y="10" text-anchor="middle" font-family="Special Elite, monospace" font-size="8" fill="#a23b2e">ENTRY</text>
+        </g>
+        <line x1="150" y1="0" x2="150" y2="150" stroke="#2c241a" stroke-width="2"/>
+      </svg>
+      <div class="cap">the wealthy skyline &amp; the stamp that decides who belongs</div>
+    </div>
+  </div>
+
+  <!-- ENTRY 7 -->
+  <div class="entry">
+    <div class="tape left"></div><div class="tape right"></div>
+    <div class="entry-head">
+      <div>
+        <div class="entry-num">Journal Entry No. 7</div>
+        <h3 class="entry-title">Text-to-Text Connections</h3>
+      </div>
+      <div class="stamp-wrap">
+        <svg class="stamp" viewBox="0 0 100 100">
+          <defs><path id="cp7" d="M 50,50 m -34,0 a 34,34 0 1,1 68,0 a 34,34 0 1,1 -68,0"/></defs>
+          <circle cx="50" cy="50" r="36" fill="none" stroke="#2f5d55" stroke-width="2"/>
+          <circle cx="50" cy="50" r="28" fill="none" stroke="#2f5d55" stroke-width="1"/>
+          <text font-family="Special Elite, monospace" font-size="7.5" fill="#2f5d55" letter-spacing="1.5">
+            <textPath href="#cp7" startOffset="3">PARALLEL PASSAGES &#9670; NO. 07 &#9670;</textPath>
+          </text>
+          <text x="50" y="55" text-anchor="middle" font-family="Special Elite, monospace" font-size="9" fill="#2f5d55">CONNECT</text>
+        </svg>
+      </div>
+    </div>
+    <p><em>What the two texts have in common (Themes, characters, conflicts, messages):</em></p>
+    <p>Both The Illegal and the film The Pursuit of Happyness center on resilient, dedicated individuals facing overwhelming socio-economic hardships, poverty, and displacement while trying to secure a safe, stable future for their families.</p>
+    <p>Just as Keita Ali is hunted as an undocumented refugee in Freedom State while clinging to his passion and survival, Chris Gardner faces homelessness, extreme financial ruin, and systemic barriers in San Francisco while working relentlessly to build a better life for his son. Both stories share powerful themes of unyielding perseverance and human dignity.</p>
+    <p><em>What makes them different:</em></p>
+    <p>The origins of their conflicts differ: Keita's struggle is driven by geopolitical corruption and immigration laws that render him invisible, whereas Chris's struggles are rooted in domestic urban poverty and corporate precarity.</p>
+    <p>Their primary vehicles for survival also differ: Keita relies on elite marathon running, while Chris relies on salesmanship and stock brokerage training.</p>
+    <p><em>How the comparison helps you better understand your novel:</em></p>
+    <p>Comparing these two texts helps us better understand The Illegal by showing that Keita's relentless running is not just an athletic pursuit, but a profound symbol of human agency against an unjust global order that denies his basic right to exist.</p>
+    <div class="scene" style="max-width:520px;">
+      <svg viewBox="0 0 320 130" xmlns="http://www.w3.org/2000/svg">
+        <rect width="320" height="130" fill="#3a332a"/>
+        <g fill="#efe6d2">
+          <rect x="0" y="0" width="10" height="8"/><rect x="0" y="14" width="10" height="8"/><rect x="0" y="28" width="10" height="8"/><rect x="0" y="42" width="10" height="8"/><rect x="0" y="56" width="10" height="8"/><rect x="0" y="70" width="10" height="8"/><rect x="0" y="84" width="10" height="8"/><rect x="0" y="98" width="10" height="8"/><rect x="0" y="112" width="10" height="8"/>
+          <rect x="310" y="0" width="10" height="8"/><rect x="310" y="14" width="10" height="8"/><rect x="310" y="28" width="10" height="8"/><rect x="310" y="42" width="10" height="8"/><rect x="310" y="56" width="10" height="8"/><rect x="310" y="70" width="10" height="8"/><rect x="310" y="84" width="10" height="8"/><rect x="310" y="98" width="10" height="8"/><rect x="310" y="112" width="10" height="8"/>
+        </g>
+        <rect x="16" y="8" width="136" height="114" fill="#c9b077"/>
+        <rect x="168" y="8" width="136" height="114" fill="#8faa9e"/>
+        <line x1="84" y1="90" x2="80" y2="112" stroke="#2c241a" stroke-width="3"/>
+        <line x1="84" y1="90" x2="88" y2="110" stroke="#2c241a" stroke-width="3"/>
+        <line x1="84" y1="90" x2="70" y2="80" stroke="#2c241a" stroke-width="3"/>
+        <circle cx="84" cy="84" r="6" fill="#2c241a"/>
+        <rect x="60" y="82" width="20" height="14" fill="#a23b2e"/>
+        <line x1="236" y1="86" x2="230" y2="112" stroke="#1f2b30" stroke-width="3"/>
+        <line x1="236" y1="86" x2="244" y2="110" stroke="#1f2b30" stroke-width="3"/>
+        <line x1="236" y1="86" x2="220" y2="76" stroke="#1f2b30" stroke-width="3"/>
+        <line x1="236" y1="86" x2="252" y2="78" stroke="#1f2b30" stroke-width="3"/>
+        <circle cx="236" cy="78" r="6" fill="#1f2b30"/>
+      </svg>
+      <div class="cap">Chris Gardner's briefcase &amp; Keita's stride, two races for survival</div>
+    </div>
+  </div>
+
+  <!-- ENTRY 8 -->
+  <div class="entry">
+    <div class="tape left"></div><div class="tape right"></div>
+    <div class="entry-head">
+      <div>
+        <div class="entry-num">Journal Entry No. 8</div>
+        <h3 class="entry-title">Creative Prompt Response</h3>
+      </div>
+      <div class="stamp-wrap">
+        <svg class="stamp" viewBox="0 0 100 100">
+          <defs><path id="cp8" d="M 50,50 m -34,0 a 34,34 0 1,1 68,0 a 34,34 0 1,1 -68,0"/></defs>
+          <circle cx="50" cy="50" r="36" fill="none" stroke="#a23b2e" stroke-width="2"/>
+          <circle cx="50" cy="50" r="28" fill="none" stroke="#a23b2e" stroke-width="1"/>
+          <text font-family="Special Elite, monospace" font-size="7.5" fill="#a23b2e" letter-spacing="1.5">
+            <textPath href="#cp8" startOffset="3">GLORY BECOMES SURVIVAL &#9670;</textPath>
+          </text>
+          <text x="50" y="55" text-anchor="middle" font-family="Special Elite, monospace" font-size="10" fill="#a23b2e">No. 08</text>
+        </svg>
+      </div>
+    </div>
+    <p><strong>Chosen Prompt:</strong> "What if the very thing you used to achieve glory became the only thing keeping you alive?"</p>
+    <p>For Keita Ali, running begins as a pure expression of joy and a proud pursuit of Olympic glory on the island of Zantoroland. However, when political violence shatters his world and forces him into the shadows as an undocumented refugee in Freedom State, that same athletic passion undergoes a profound transformation. It is no longer about medals or podium finishes; it becomes a desperate, literal mechanism for survival. As Lawrence Hill illustrates through Keita's relentless underground races to secure funds and protect his family, running morphs into his only shield against an oppressive system that seeks to render him invisible. This shift demonstrates that Keita's greatest strength is not just his physical speed, but his refusal to let circumstances strip away the core identity and hope that define who he is.</p>
+    <div class="scene" style="filter:grayscale(1);">
+      <svg viewBox="0 0 260 170" xmlns="http://www.w3.org/2000/svg">
+        <rect width="260" height="170" fill="#8f8a7c"/>
+        <g stroke="#5c5848" stroke-width="1">
+          <line x1="0" y1="30" x2="260" y2="30"/><line x1="0" y1="60" x2="260" y2="60"/>
+          <line x1="0" y1="90" x2="260" y2="90"/><line x1="0" y1="120" x2="260" y2="120"/>
+          <line x1="40" y1="0" x2="40" y2="120"/><line x1="90" y1="0" x2="90" y2="120"/>
+          <line x1="140" y1="0" x2="140" y2="120"/><line x1="190" y1="0" x2="190" y2="120"/>
+          <line x1="230" y1="0" x2="230" y2="120"/>
+        </g>
+        <rect y="120" width="260" height="50" fill="#5c5848"/>
+        <g transform="translate(150,60)" fill="none" stroke="#2c241a" stroke-width="3.5" opacity="0.9">
+          <path d="M0,60 L-14,110"/>
+          <path d="M0,60 L18,105"/>
+          <path d="M0,60 L-20,40"/>
+          <path d="M0,60 L24,50"/>
+          <circle cx="0" cy="52" r="9" fill="#2c241a" stroke="none"/>
+        </g>
+        <g stroke="#3a3630" stroke-width="2" opacity="0.5">
+          <line x1="60" y1="72" x2="90" y2="72"/>
+          <line x1="55" y1="82" x2="88" y2="82"/>
+          <line x1="50" y1="92" x2="86" y2="92"/>
+        </g>
+      </svg>
+      <div class="cap">glory field → survival street</div>
+    </div>
+  </div>
+
+  <!-- ENTRY 9 -->
+  <div class="entry">
+    <div class="tape left"></div><div class="tape right"></div>
+    <div class="entry-head">
+      <div>
+        <div class="entry-num">Journal Entry No. 9</div>
+        <h3 class="entry-title">Creative Prompt Response</h3>
+      </div>
+      <div class="stamp-wrap">
+        <svg class="stamp" viewBox="0 0 100 100">
+          <defs><path id="cp9" d="M 50,50 m -34,0 a 34,34 0 1,1 68,0 a 34,34 0 1,1 -68,0"/></defs>
+          <circle cx="50" cy="50" r="36" fill="none" stroke="#2f5d55" stroke-width="2"/>
+          <circle cx="50" cy="50" r="28" fill="none" stroke="#2f5d55" stroke-width="1"/>
+          <text font-family="Special Elite, monospace" font-size="7.5" fill="#2f5d55" letter-spacing="1.5">
+            <textPath href="#cp9" startOffset="3">TWO NATIONS, ONE MAP &#9670;</textPath>
+          </text>
+          <text x="50" y="55" text-anchor="middle" font-family="Special Elite, monospace" font-size="10" fill="#2f5d55">No. 09</text>
+        </svg>
+      </div>
+    </div>
+    <p><strong>Chosen Prompt:</strong> "How does the setting, moving from the political instability of Zantoroland to the cold bureaucracy of Freedom State, shape the choices and moral dilemmas of the characters?"</p>
+    <p>The stark contrast between Zantoroland and Freedom State serves as a driving force behind every moral dilemma and survival choice the characters make. In Zantoroland, the constant threat of state-sanctioned violence and corruption forces characters like Keita's journalist father to risk everything to speak the truth, while forcing Keita into immediate flight. Upon arriving in Freedom State, a wealthy democracy built on exclusionary immigration laws, Keita faces a completely different kind of danger: systemic alienation, poverty, and the invisible cage of being labeled an "illegal." This environment forces otherwise law-abiding individuals, such as Ivernia Beech and supportive local journalists, to break the law and subvert bureaucratic rules just to extend basic human kindness. Ultimately, the setting highlights that systemic injustice forces ordinary people to choose between blindly following corrupt laws or maintaining their basic human empathy.</p>
+    <div class="scrapbook-pair">
+      <div class="polaroid">
+        <div class="frame" style="background:#e6d6a7;">
+          <svg viewBox="0 0 160 130" width="100%" height="100%">
+            <rect width="160" height="130" fill="#e6d6a7"/>
+            <path d="M30,100 Q40,70 65,75 Q95,80 100,50 Q104,30 90,15 Q120,25 118,55 Q116,90 80,105 Q50,118 30,100 Z" fill="#c9b077" stroke="#7a5c34" stroke-width="1.5"/>
+            <circle cx="130" cy="30" r="14" fill="none" stroke="#7a5c34" stroke-width="1"/>
+            <line x1="130" y1="18" x2="130" y2="42" stroke="#7a5c34" stroke-width="0.6"/>
+            <line x1="118" y1="30" x2="142" y2="30" stroke="#7a5c34" stroke-width="0.6"/>
+            <path d="M70,60 L74,66 L70,72 L66,66 Z" fill="#a23b2e"/>
+          </svg>
+        </div>
+        <div class="cap">Zantoroland</div>
+      </div>
+      <div class="polaroid">
+        <div class="frame" style="background:linear-gradient(160deg,#3a4a4f,#1f2b30);">
+          <svg viewBox="0 0 160 130" width="100%" height="100%">
+            <rect width="160" height="130" fill="#1f2b30"/>
+            <g fill="#3a4a4f">
+              <rect x="10" y="60" width="18" height="70"/>
+              <rect x="34" y="40" width="22" height="90"/>
+              <rect x="62" y="70" width="16" height="60"/>
+              <rect x="84" y="20" width="24" height="110"/>
+              <rect x="114" y="50" width="20" height="80"/>
+            </g>
+            <g fill="#c9b077" opacity="0.7">
+              <rect x="40" y="50" width="3" height="3"/><rect x="47" y="50" width="3" height="3"/>
+              <rect x="40" y="60" width="3" height="3"/><rect x="47" y="60" width="3" height="3"/>
+              <rect x="90" y="32" width="3" height="3"/><rect x="98" y="32" width="3" height="3"/>
+              <rect x="90" y="44" width="3" height="3"/><rect x="98" y="44" width="3" height="3"/>
+            </g>
+          </svg>
+        </div>
+        <div class="cap">Freedom State</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENTRY 10 -->
+  <div class="entry">
+    <div class="tape left"></div><div class="tape right"></div>
+    <div class="entry-head">
+      <div>
+        <div class="entry-num">Journal Entry No. 10</div>
+        <h3 class="entry-title">Imagined Artifact — Ivernia Beech</h3>
+      </div>
+      <div class="stamp-wrap">
+        <svg class="stamp" viewBox="0 0 100 100">
+          <defs><path id="cp10" d="M 50,50 m -34,0 a 34,34 0 1,1 68,0 a 34,34 0 1,1 -68,0"/></defs>
+          <circle cx="50" cy="50" r="36" fill="none" stroke="#a23b2e" stroke-width="2"/>
+          <circle cx="50" cy="50" r="28" fill="none" stroke="#a23b2e" stroke-width="1"/>
+          <text font-family="Special Elite, monospace" font-size="7.5" fill="#a23b2e" letter-spacing="1.5">
+            <textPath href="#cp10" startOffset="3">LIBRARY CARD ISSUED &#9670;</textPath>
+          </text>
+          <text x="50" y="55" text-anchor="middle" font-family="Special Elite, monospace" font-size="10" fill="#a23b2e">No. 10</text>
+        </svg>
+      </div>
+    </div>
+    <p><strong>Chosen Prompt:</strong> Create an imagined artifact or diary entry from a supporting character (such as Ivernia Beech) reflecting on their decision to help Keita.</p>
+    <div class="letter">
+      "They call them 'illegals' as if a piece of paper or a missing stamp from a government office could somehow erase a human being's heartbeat, their history, or their dignity. Today a young man walked into the library, exhausted, cautious, eyes darting like he expected the world to cave in on him at any second. He didn't ask for much. Just a safe corner to breathe, and maybe a moment to feel human again in a city that treats people like disposable cargo. They think keeping track of papers keeps their society safe, but I look at these kids running for their lives, and I know real safety comes from looking out for one another. I slid that library card across the desk with a quiet nod. Let the authorities complain about protocol. Some rules were made to be broken when the soul of a community is on the line."
+    </div>
+    <div class="scene">
+      <svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
+        <rect width="300" height="150" fill="#dccb9c"/>
+        <g transform="translate(30,20) rotate(-2)">
+          <rect x="0" y="0" width="180" height="100" fill="#f4ecdb" stroke="#2c241a" stroke-width="1.5"/>
+          <text x="14" y="20" font-family="Special Elite, monospace" font-size="9" fill="#2c241a">LIBRARY CARD</text>
+          <line x1="14" y1="30" x2="166" y2="30" stroke="#2c241a" stroke-width="0.6"/>
+          <text x="14" y="44" font-family="Special Elite, monospace" font-size="6.5" fill="#52483a">DATE DUE</text>
+          <line x1="14" y1="54" x2="166" y2="54" stroke="#c9bda0" stroke-width="0.6"/>
+          <line x1="14" y1="64" x2="166" y2="64" stroke="#c9bda0" stroke-width="0.6"/>
+          <line x1="14" y1="74" x2="166" y2="74" stroke="#c9bda0" stroke-width="0.6"/>
+          <line x1="14" y1="84" x2="166" y2="84" stroke="#c9bda0" stroke-width="0.6"/>
+          <g transform="translate(130,60) rotate(-12)">
+            <circle r="24" fill="none" stroke="#2f5d55" stroke-width="2" opacity="0.85"/>
+            <text y="-2" text-anchor="middle" font-family="Special Elite, monospace" font-size="7" fill="#2f5d55">ISSUED</text>
+            <text y="9" text-anchor="middle" font-family="Special Elite, monospace" font-size="6" fill="#2f5d55">W/ KINDNESS</text>
+          </g>
+        </g>
+        <g transform="translate(225,55) rotate(6)">
+          <path d="M0,0 L70,0 L70,60 L35,80 L0,60 Z" fill="#c9b077" stroke="#2c241a" stroke-width="1.2"/>
+        </g>
+      </svg>
+      <div class="cap">the card she slid across the desk</div>
+    </div>
+  </div>
+
+  <div class="desk-footer">— End of Journal —</div>
+  <div class="desk-footer">— Written By Andre Dousheh —</div>
+</div>
+</body>
+</html>
